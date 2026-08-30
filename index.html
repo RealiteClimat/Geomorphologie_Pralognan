@@ -35,10 +35,9 @@
         <script src="js/rbush.min.js"></script>
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
-        <script src="js/leaflet-tilelayer-wmts.js"></script>
         <script src="js/leaflet.photon.js"></script>
-        <script src="data/Glacierrocheux_4.js"></script>
-        <script src="data/Lignes_5.js"></script>
+        <script src="data/Glacierrocheux_2.js"></script>
+        <script src="data/Lignes_3.js"></script>
         <script>
         var m2px = 1;
         function newM2px() {
@@ -59,7 +58,7 @@
         }
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[45.293671748430256,6.612447011591214],[45.31747480050773,6.66222282276906]]);
+        }).fitBounds([[45.334519276374856,6.660893571025494],[45.33749607133139,6.667120184001489]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/qgis2web/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -154,44 +153,20 @@
         });
         layer_MNTLiDARHDIGN_0;
         map.addLayer(layer_MNTLiDARHDIGN_0);
-        map.createPane('pane_OpenTopoMap_1');
-        map.getPane('pane_OpenTopoMap_1').style.zIndex = 401;
-        var layer_OpenTopoMap_1 = L.tileLayer('https://a.tile.opentopomap.org/{z}/{x}/{y}.png', {
-            pane: 'pane_OpenTopoMap_1',
+        map.createPane('pane_GeoQMap_1');
+        map.getPane('pane_GeoQMap_1').style.zIndex = 401;
+        var layer_GeoQMap_1 = L.tileLayer('https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}', {
+            pane: 'pane_GeoQMap_1',
             opacity: 1.0,
-            attribution: '<a href="https://www.openstreetmap.org/copyright">Kartendaten: © OpenStreetMap-Mitwirkende, SRTM | Kartendarstellung: © OpenTopoMap (CC-BY-SA)</a>',
+            attribution: '',
             minZoom: 1,
             maxZoom: 28,
             minNativeZoom: 0,
             maxNativeZoom: 18
         });
-        layer_OpenTopoMap_1;
-        map.addLayer(layer_OpenTopoMap_1);
-        map.createPane('pane_Photographiesariennes2024_2');
-        map.getPane('pane_Photographiesariennes2024_2').style.zIndex = 402;
-        var layer_Photographiesariennes2024_2 = L.tileLayer.wmts('https://data.geopf.fr/wmts', {
-            pane: 'pane_Photographiesariennes2024_2',
-            layer: 'ORTHOIMAGERY.ORTHOPHOTOS2024',
-            tilematrixSet: 'PM_6_19',
-            format: 'image/jpeg',
-            style: 'normal',
-            uppercase: true,
-            transparent: true,
-            continuousWorld : true,
-            opacity: 1.0,
-            attribution: '',
-        });
-        map.addLayer(layer_Photographiesariennes2024_2);
-        map.createPane('pane_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3');
-        map.getPane('pane_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3').style.zIndex = 403;
-        var img_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3 = 'data/Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3.png';
-        var img_bounds_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3 = [[45.010930652014835,5.95335492581047],[45.651842917167876,7.162359852449358]];
-        var layer_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3 = new L.imageOverlay(img_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3,
-                                              img_bounds_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3,
-                                              {pane: 'pane_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3'});
-        bounds_group.addLayer(layer_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3);
-        map.addLayer(layer_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3);
-        function pop_Glacierrocheux_4(feature, layer) {
+        layer_GeoQMap_1;
+        map.addLayer(layer_GeoQMap_1);
+        function pop_Glacierrocheux_2(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -211,21 +186,21 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_Glacierrocheux_4_0() {
+        function style_Glacierrocheux_2_0() {
             return {
-                pane: 'pane_Glacierrocheux_4',
+                pane: 'pane_Glacierrocheux_2',
                 stroke: false, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(254,33,203,0.25098039215686274)',
+                fillColor: 'rgba(254,33,203,0.10196078431372549)',
                 interactive: true,
             }
         }
-        function style_Glacierrocheux_4_1() {
+        function style_Glacierrocheux_2_1() {
             return {
-                pane: 'pane_Glacierrocheux_4',
+                pane: 'pane_Glacierrocheux_2',
                 opacity: 1,
-                color: 'rgba(255,255,255,0.0)',
+                color: 'rgba(254,33,203,0.10196078431372549)',
                 dashArray: 'null',
                 lineCap: 'square',
                 lineJoin: 'bevel',
@@ -234,21 +209,21 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_Glacierrocheux_4');
-        map.getPane('pane_Glacierrocheux_4').style.zIndex = 404;
-        map.getPane('pane_Glacierrocheux_4').style['mix-blend-mode'] = 'normal';
-        var layer_Glacierrocheux_4 = new L.geoJson.multiStyle(json_Glacierrocheux_4, {
+        map.createPane('pane_Glacierrocheux_2');
+        map.getPane('pane_Glacierrocheux_2').style.zIndex = 402;
+        map.getPane('pane_Glacierrocheux_2').style['mix-blend-mode'] = 'normal';
+        var layer_Glacierrocheux_2 = new L.geoJson.multiStyle(json_Glacierrocheux_2, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_Glacierrocheux_4',
-            layerName: 'layer_Glacierrocheux_4',
-            pane: 'pane_Glacierrocheux_4',
-            onEachFeature: pop_Glacierrocheux_4,
-            styles: [style_Glacierrocheux_4_0,style_Glacierrocheux_4_1,]
+            dataVar: 'json_Glacierrocheux_2',
+            layerName: 'layer_Glacierrocheux_2',
+            pane: 'pane_Glacierrocheux_2',
+            onEachFeature: pop_Glacierrocheux_2,
+            styles: [style_Glacierrocheux_2_0,style_Glacierrocheux_2_1,]
         });
-        bounds_group.addLayer(layer_Glacierrocheux_4);
-        map.addLayer(layer_Glacierrocheux_4);
-        function pop_Lignes_5(feature, layer) {
+        bounds_group.addLayer(layer_Glacierrocheux_2);
+        map.addLayer(layer_Glacierrocheux_2);
+        function pop_Lignes_3(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -264,41 +239,38 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_Lignes_5_0() {
+        function style_Lignes_3_0() {
             return {
-                pane: 'pane_Lignes_5',
+                pane: 'pane_Lignes_3',
                 opacity: 1,
-                color: 'rgba(207,0,230,1.0)',
+                color: 'rgba(207,0,230,0.6901960784313725)',
                 dashArray: 'null',
                 lineCap: 'square',
                 lineJoin: 'bevel',
-                weight: geoStyle(4.0),
+                weight: geoStyle(2.0),
                 fillOpacity: 0,
                 interactive: true,
             }
         }
-        map.createPane('pane_Lignes_5');
-        map.getPane('pane_Lignes_5').style.zIndex = 405;
-        map.getPane('pane_Lignes_5').style['mix-blend-mode'] = 'normal';
-        var layer_Lignes_5 = new L.geoJson(json_Lignes_5, {
+        map.createPane('pane_Lignes_3');
+        map.getPane('pane_Lignes_3').style.zIndex = 403;
+        map.getPane('pane_Lignes_3').style['mix-blend-mode'] = 'normal';
+        var layer_Lignes_3 = new L.geoJson(json_Lignes_3, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_Lignes_5',
-            layerName: 'layer_Lignes_5',
-            pane: 'pane_Lignes_5',
-            onEachFeature: pop_Lignes_5,
-            style: style_Lignes_5_0,
+            dataVar: 'json_Lignes_3',
+            layerName: 'layer_Lignes_3',
+            pane: 'pane_Lignes_3',
+            onEachFeature: pop_Lignes_3,
+            style: style_Lignes_3_0,
         });
-        bounds_group.addLayer(layer_Lignes_5);
-        map.addLayer(layer_Lignes_5);
+        bounds_group.addLayer(layer_Lignes_3);
+        map.addLayer(layer_Lignes_3);
         var overlaysTree = [
-            {label: '<img src="legend/Lignes_5.png" /> Lignes', layer: layer_Lignes_5},
-            {label: '<img src="legend/Glacierrocheux_4.png" /> Glacier rocheux', layer: layer_Glacierrocheux_4},
-        {label: '<b>Interferogram</b>', collapsed: true, selectAllCheckbox: true, children: [
-            {label: "Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC", layer: layer_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3},]},
+            {label: '<img src="legend/Lignes_3.png" /> Lignes', layer: layer_Lignes_3},
+            {label: '<img src="legend/Glacierrocheux_2.png" /> Glacier rocheux', layer: layer_Glacierrocheux_2},
         {label: '<b>Satellite</b>',  selectAllCheckbox: true, children: [
-            {label: "Photographies aériennes 2024", layer: layer_Photographiesariennes2024_2, radioGroup: 'bm' },
-            {label: "OpenTopoMap", layer: layer_OpenTopoMap_1, radioGroup: 'bm' },
+            {label: "GeoQ Map", layer: layer_GeoQMap_1, radioGroup: 'bm' },
             {label: "MNT LiDAR HD IGN", layer: layer_MNTLiDARHDIGN_0, radioGroup: 'bm' },]},]
         var lay = L.control.layers.tree(null, overlaysTree,{
             //namedToggle: true,
@@ -313,18 +285,13 @@
         setBounds();
         newM2px();
 
-            layer_Glacierrocheux_4.setStyle(style_Glacierrocheux_4_0);
-            layer_Lignes_5.setStyle(style_Lignes_5_0);
+            layer_Glacierrocheux_2.setStyle(style_Glacierrocheux_2_0);
+            layer_Lignes_3.setStyle(style_Lignes_3_0);
         map.on("zoomend", function(){
             newM2px();
 
-            layer_Glacierrocheux_4.setStyle(style_Glacierrocheux_4_0);
-            layer_Lignes_5.setStyle(style_Lignes_5_0);
-        });
-        L.ImageOverlay.include({
-            getBounds: function () {
-                return this._bounds;
-            }
+            layer_Glacierrocheux_2.setStyle(style_Glacierrocheux_2_0);
+            layer_Lignes_3.setStyle(style_Lignes_3_0);
         });
         </script>        
     </body>
