@@ -59,7 +59,7 @@
         }
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[45.30459955611267,6.63020635055],[45.3165022080307,6.655097465068962]]);
+        }).fitBounds([[45.293671748430256,6.612447011591214],[45.31747480050773,6.66222282276906]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/qgis2web/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -264,47 +264,17 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_Lignes_5_0(feature) {
-            switch(String(feature.properties['Type'])) {
-                case 'L':
-                    return {
+        function style_Lignes_5_0() {
+            return {
                 pane: 'pane_Lignes_5',
                 opacity: 1,
                 color: 'rgba(207,0,230,1.0)',
-                dashArray: '',
+                dashArray: 'null',
                 lineCap: 'square',
                 lineJoin: 'bevel',
-                weight: 1.0,
+                weight: geoStyle(4.0),
                 fillOpacity: 0,
                 interactive: true,
-            }
-                    break;
-                case 'T':
-                    return {
-                pane: 'pane_Lignes_5',
-                opacity: 1,
-                color: 'rgba(207,0,230,1.0)',
-                dashArray: '',
-                lineCap: 'square',
-                lineJoin: 'bevel',
-                weight: 1.0,
-                fillOpacity: 0,
-                interactive: true,
-            }
-                    break;
-                case 'F':
-                    return {
-                pane: 'pane_Lignes_5',
-                opacity: 1,
-                color: 'rgba(207,0,230,1.0)',
-                dashArray: '',
-                lineCap: 'square',
-                lineJoin: 'bevel',
-                weight: 1.0,
-                fillOpacity: 0,
-                interactive: true,
-            }
-                    break;
             }
         }
         map.createPane('pane_Lignes_5');
@@ -322,13 +292,13 @@
         bounds_group.addLayer(layer_Lignes_5);
         map.addLayer(layer_Lignes_5);
         var overlaysTree = [
-            {label: 'Lignes<br /><table><tr><td style="text-align: center;"><img src="legend/Lignes_5_L0.png" /></td><td>L</td></tr><tr><td style="text-align: center;"><img src="legend/Lignes_5_T1.png" /></td><td>T</td></tr><tr><td style="text-align: center;"><img src="legend/Lignes_5_F2.png" /></td><td>F</td></tr></table>', layer: layer_Lignes_5},
+            {label: '<img src="legend/Lignes_5.png" /> Lignes', layer: layer_Lignes_5},
             {label: '<img src="legend/Glacierrocheux_4.png" /> Glacier rocheux', layer: layer_Glacierrocheux_4},
-        {label: '<b>Interferogram</b>',  selectAllCheckbox: true, children: [
+        {label: '<b>Interferogram</b>', collapsed: true, selectAllCheckbox: true, children: [
             {label: "Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC", layer: layer_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3},]},
         {label: '<b>Satellite</b>',  selectAllCheckbox: true, children: [
             {label: "Photographies aériennes 2024", layer: layer_Photographiesariennes2024_2, radioGroup: 'bm' },
-            {label: "OpenTopoMap", layer: layer_OpenTopoMap_1},
+            {label: "OpenTopoMap", layer: layer_OpenTopoMap_1, radioGroup: 'bm' },
             {label: "MNT LiDAR HD IGN", layer: layer_MNTLiDARHDIGN_0, radioGroup: 'bm' },]},]
         var lay = L.control.layers.tree(null, overlaysTree,{
             //namedToggle: true,
@@ -344,10 +314,12 @@
         newM2px();
 
             layer_Glacierrocheux_4.setStyle(style_Glacierrocheux_4_0);
+            layer_Lignes_5.setStyle(style_Lignes_5_0);
         map.on("zoomend", function(){
             newM2px();
 
             layer_Glacierrocheux_4.setStyle(style_Glacierrocheux_4_0);
+            layer_Lignes_5.setStyle(style_Lignes_5_0);
         });
         L.ImageOverlay.include({
             getBounds: function () {
