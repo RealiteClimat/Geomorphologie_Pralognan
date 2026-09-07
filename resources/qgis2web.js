@@ -12,7 +12,7 @@ var map = new ol.Map({
 });
 
 //initial view - epsg:3857 coordinates if not "Match project CRS"
-map.getView().fit([726079.383882, 5660892.626654, 757720.615702, 5680566.052766], map.getSize());
+map.getView().fit([740492.132876, 5675684.073559, 744653.548265, 5678271.694026], map.getSize());
 
 //change cursor
 function pointerOnFeature(evt) {
@@ -499,6 +499,44 @@ var bottomRightContainerDiv = document.getElementById('bottom-right-container')
 
 //abstract
 
+var Abstract = new ol.control.Control({
+    element: (() => {
+        var titleElement = document.createElement('div');
+        titleElement.className = 'top-right-abstract ol-control';
+        titleElement.id = 'abstract';
+
+        var linkElement = document.createElement('a');
+
+        if (1635 > 240) {
+            linkElement.setAttribute("onmouseenter", "showAbstract()");
+            linkElement.setAttribute("onmouseleave", "hideAbstract()");
+            linkElement.innerHTML = 'i';
+
+            window.hideAbstract = function() {
+                linkElement.classList.add("project-abstract");
+                linkElement.classList.remove("project-abstract-uncollapsed");
+                linkElement.innerHTML = 'i';
+            }
+
+            window.showAbstract = function() {
+                linkElement.classList.remove("project-abstract");
+                linkElement.classList.add("project-abstract-uncollapsed");
+                linkElement.innerHTML = 'Cette carte recense l\'ensemble des glaciers rocheux présents sur le secteur de Pralognan, elle n\'est pas terminée.<br />Leur activité n\'est pas indiquée car les données à disposition ne permettent pas un diagnostic assez précis pour tirer des conclusions.<br />La couche Interferogram permet de déduire un semblant d\'activité. Elle correspond à de l\'interférométrie radar (InSAR), elle a été faite à partir des données du satellite Sentinel-1. Le satellite balaie la zone en émettant des ondes électromagnétiques à des intervalles réguliers de 6 jours. Si la surface du sol s\'est déplacée entre les deux passages, l\'onde radar mettra une fraction de seconde différente pour faire l\'aller-retour. L\'interférogramme illustre simplement la soustraction entre la première et la deuxième image.<br />Pour comprendre la palette de couleurs : la carte affiche des cycles de couleurs répétitifs appelés des "franges". Chaque cycle complet (allant par exemple du rouge au bleu) représente un déplacement du sol d\'environ 2,8 centimètres, ce qui correspond à la moitié de la longueur d\'onde du signal de Sentinel-1. Ainsi, plus ces bandes de couleurs sont resserrées et nombreuses au-dessus d\'un glacier rocheux, plus le mouvement de la masse est rapide. À l\'inverse, une zone de couleur unie indique un versant stable.<br />Attention : la végétation ou les variations atmosphériques (changement d\'humidité, nuages) entre les deux passages du satellite peuvent également perturber le signal radar. Ces éléments créent du "bruit" ou de fausses franges colorées qui produisent un résultat visuel similaire, sans pour autant qu\'il y ait de véritable mouvement au sol.<br />';
+            }
+
+            hideAbstract();
+        } else {
+            linkElement.classList.add("project-abstract-uncollapsed");
+            linkElement.innerHTML = 'Cette carte recense l\'ensemble des glaciers rocheux présents sur le secteur de Pralognan, elle n\'est pas terminée.<br />Leur activité n\'est pas indiquée car les données à disposition ne permettent pas un diagnostic assez précis pour tirer des conclusions.<br />La couche Interferogram permet de déduire un semblant d\'activité. Elle correspond à de l\'interférométrie radar (InSAR), elle a été faite à partir des données du satellite Sentinel-1. Le satellite balaie la zone en émettant des ondes électromagnétiques à des intervalles réguliers de 6 jours. Si la surface du sol s\'est déplacée entre les deux passages, l\'onde radar mettra une fraction de seconde différente pour faire l\'aller-retour. L\'interférogramme illustre simplement la soustraction entre la première et la deuxième image.<br />Pour comprendre la palette de couleurs : la carte affiche des cycles de couleurs répétitifs appelés des "franges". Chaque cycle complet (allant par exemple du rouge au bleu) représente un déplacement du sol d\'environ 2,8 centimètres, ce qui correspond à la moitié de la longueur d\'onde du signal de Sentinel-1. Ainsi, plus ces bandes de couleurs sont resserrées et nombreuses au-dessus d\'un glacier rocheux, plus le mouvement de la masse est rapide. À l\'inverse, une zone de couleur unie indique un versant stable.<br />Attention : la végétation ou les variations atmosphériques (changement d\'humidité, nuages) entre les deux passages du satellite peuvent également perturber le signal radar. Ces éléments créent du "bruit" ou de fausses franges colorées qui produisent un résultat visuel similaire, sans pour autant qu\'il y ait de véritable mouvement au sol.<br />';
+        }
+
+        titleElement.appendChild(linkElement);
+        return titleElement;
+    })(),
+    target: 'top-right-container'
+});
+map.addControl(Abstract);
+
 
 //geolocate
 
@@ -531,8 +569,8 @@ map.addControl(layerSwitcher);
 
 map.getView().on('change:resolution', function(evt){
 
-            lyr_Glacierrocheux_4.setStyle(style_Glacierrocheux_4);
-            lyr_Lignes_93_5.setStyle(style_Lignes_93_5);
+            lyr_Glacierrocheux_2.setStyle(style_Glacierrocheux_2);
+            lyr_Lignes_93_3.setStyle(style_Lignes_93_3);
 });
 
 function m2px(m) {
