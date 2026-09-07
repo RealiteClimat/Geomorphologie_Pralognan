@@ -12,7 +12,7 @@ var map = new ol.Map({
 });
 
 //initial view - epsg:3857 coordinates if not "Match project CRS"
-map.getView().fit([734512.712770, 5653188.136293, 766142.364509, 5672873.288049], map.getSize());
+map.getView().fit([726079.383882, 5660892.626654, 757720.615702, 5680566.052766], map.getSize());
 
 //change cursor
 function pointerOnFeature(evt) {
@@ -531,9 +531,8 @@ map.addControl(layerSwitcher);
 
 map.getView().on('change:resolution', function(evt){
 
-            lyr_LineaireColdelaVanoise_5.setStyle(style_LineaireColdelaVanoise_5);
-            lyr_Glacierrocheux_6.setStyle(style_Glacierrocheux_6);
-            lyr_Lignes_93_7.setStyle(style_Lignes_93_7);
+            lyr_Glacierrocheux_4.setStyle(style_Glacierrocheux_4);
+            lyr_Lignes_93_5.setStyle(style_Lignes_93_5);
 });
 
 function m2px(m) {
