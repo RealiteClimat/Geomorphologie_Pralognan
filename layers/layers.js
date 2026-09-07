@@ -113,15 +113,15 @@ var lyr_Lignes_93_5 = new ol.layer.Vector({
     <img src="styles/legend/Lignes_93_5_4.png" /> Front pincipal<br />' });
 var group_Interferogram = new ol.layer.Group({
                                 layers: [lyr_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3,],
-                                fold: 'open',
+                                fold: 'close',
                                 title: 'Interferogram'});
 var group_Satellite = new ol.layer.Group({
-                                layers: [lyr_MNTLiDARHDIGN_0,lyr_OpenTopoMap_1,lyr_Photographiesariennes2024_2,],
+                                layers: [lyr_MNTLiDARHDIGN_0,lyr_OpenTopoMap_1,],
                                 fold: 'open',
                                 title: 'Satellite'});
 
 lyr_MNTLiDARHDIGN_0.setVisible(true);lyr_OpenTopoMap_1.setVisible(true);lyr_Photographiesariennes2024_2.setVisible(true);lyr_Pralognan_2026_08_15_Orb_Stack_esd_ifg_deb_flt_TC_3.setVisible(true);lyr_Glacierrocheux_4.setVisible(true);lyr_Lignes_93_5.setVisible(true);
-var layersList = [group_Satellite,group_Interferogram,lyr_Glacierrocheux_4,lyr_Lignes_93_5];
+var layersList = [group_Satellite,lyr_Photographiesariennes2024_2,group_Interferogram,lyr_Glacierrocheux_4,lyr_Lignes_93_5];
 lyr_Glacierrocheux_4.set('fieldAliases', {'id': 'id', 'Activiter': 'Activiter', 'Photos': 'Photos', });
 lyr_Lignes_93_5.set('fieldAliases', {'id': 'id', 'Type': 'Type', });
 lyr_Glacierrocheux_4.set('fieldImages', {'id': 'TextEdit', 'Activiter': 'TextEdit', 'Photos': 'ExternalResource', });
