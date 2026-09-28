@@ -4,7 +4,7 @@ var map = new ol.Map({
     renderer: 'canvas',
     layers: layersList,
     view: new ol.View({
-        constrainResolution: true,
+        constrainResolution: false,
         maxZoom: 28,
         minZoom: 1,
         
@@ -12,7 +12,7 @@ var map = new ol.Map({
 });
 
 //initial view - epsg:3857 coordinates if not "Match project CRS"
-map.getView().fit([741053.174206, 5675616.255261, 745214.698214, 5678204.108261], map.getSize());
+map.getView().fit([732051.029758, 5666010.937155, 748221.140260, 5675861.170412], map.getSize());
 
 //change cursor
 function pointerOnFeature(evt) {
@@ -499,53 +499,373 @@ var bottomRightContainerDiv = document.getElementById('bottom-right-container')
 
 //abstract
 
-var Abstract = new ol.control.Control({
-    element: (() => {
-        var titleElement = document.createElement('div');
-        titleElement.className = 'bottom-left-abstract ol-control';
-        titleElement.id = 'abstract';
-
-        var linkElement = document.createElement('a');
-
-        if (1689 > 240) {
-            linkElement.setAttribute("onmouseenter", "showAbstract()");
-            linkElement.setAttribute("onmouseleave", "hideAbstract()");
-            linkElement.innerHTML = 'i';
-
-            window.hideAbstract = function() {
-                linkElement.classList.add("project-abstract");
-                linkElement.classList.remove("project-abstract-uncollapsed");
-                linkElement.innerHTML = 'i';
-            }
-
-            window.showAbstract = function() {
-                linkElement.classList.remove("project-abstract");
-                linkElement.classList.add("project-abstract-uncollapsed");
-                linkElement.innerHTML = 'Cette carte recense l\'ensemble des glaciers rocheux présents sur le secteur de Pralognan, elle n\'est pas terminée.<br />Leur activité n\'est pas indiquée car les données à disposition ne permettent pas un diagnostic assez précis pour tirer des conclusions.<br />La couche Interferogram permet de déduire un semblant d\'activité. Elle correspond à de l\'interférométrie radar (InSAR), elle a été faite à partir des données du satellite Sentinel-1. Le satellite balaie la zone en émettant des ondes électromagnétiques à des intervalles réguliers de 6 jours. Si la surface du sol s\'est déplacée entre les deux passages, l\'onde radar mettra une fraction de seconde différente pour faire l\'aller-retour. L\'interférogramme illustre simplement la soustraction entre la première et la deuxième image.<br />Pour comprendre la palette de couleurs : la carte affiche des cycles de couleurs répétitifs appelés des "franges". Chaque cycle complet (allant par exemple du rouge au bleu) représente un déplacement du sol d\'environ 2,8 centimètres, ce qui correspond à la moitié de la longueur d\'onde du signal de Sentinel-1. Ainsi, plus ces bandes de couleurs sont resserrées et nombreuses au-dessus d\'un glacier rocheux, plus le mouvement de la masse est rapide. À l\'inverse, une zone de couleur unie indique un versant stable.<br />Attention : la végétation ou les variations atmosphériques (changement d\'humidité, nuages) entre les deux passages du satellite peuvent également perturber le signal radar. Ces éléments créent du "bruit" ou de fausses franges colorées qui produisent un résultat visuel similaire, sans pour autant qu\'il y ait de véritable mouvement au sol.<br /><br />Dates utilisées  : 15/08/2026-27/08/2027 <br />Past : 161<br />';
-            }
-
-            hideAbstract();
-        } else {
-            linkElement.classList.add("project-abstract-uncollapsed");
-            linkElement.innerHTML = 'Cette carte recense l\'ensemble des glaciers rocheux présents sur le secteur de Pralognan, elle n\'est pas terminée.<br />Leur activité n\'est pas indiquée car les données à disposition ne permettent pas un diagnostic assez précis pour tirer des conclusions.<br />La couche Interferogram permet de déduire un semblant d\'activité. Elle correspond à de l\'interférométrie radar (InSAR), elle a été faite à partir des données du satellite Sentinel-1. Le satellite balaie la zone en émettant des ondes électromagnétiques à des intervalles réguliers de 6 jours. Si la surface du sol s\'est déplacée entre les deux passages, l\'onde radar mettra une fraction de seconde différente pour faire l\'aller-retour. L\'interférogramme illustre simplement la soustraction entre la première et la deuxième image.<br />Pour comprendre la palette de couleurs : la carte affiche des cycles de couleurs répétitifs appelés des "franges". Chaque cycle complet (allant par exemple du rouge au bleu) représente un déplacement du sol d\'environ 2,8 centimètres, ce qui correspond à la moitié de la longueur d\'onde du signal de Sentinel-1. Ainsi, plus ces bandes de couleurs sont resserrées et nombreuses au-dessus d\'un glacier rocheux, plus le mouvement de la masse est rapide. À l\'inverse, une zone de couleur unie indique un versant stable.<br />Attention : la végétation ou les variations atmosphériques (changement d\'humidité, nuages) entre les deux passages du satellite peuvent également perturber le signal radar. Ces éléments créent du "bruit" ou de fausses franges colorées qui produisent un résultat visuel similaire, sans pour autant qu\'il y ait de véritable mouvement au sol.<br /><br />Dates utilisées  : 15/08/2026-27/08/2027 <br />Past : 161<br />';
-        }
-
-        titleElement.appendChild(linkElement);
-        return titleElement;
-    })(),
-    target: 'bottom-left-container'
-});
-map.addControl(Abstract);
-
 
 //geolocate
 
 
 
 //measurement
+let measuring = false;
+
+	const measureButton = document.createElement('button');
+	measureButton.className = 'measure-button fas fa-ruler';
+	measureButton.title = 'Measure';
+
+	const measureControl = document.createElement('div');
+	measureControl.className = 'ol-unselectable ol-control measure-control';
+	measureControl.appendChild(measureButton);
+	map.getTargetElement().appendChild(measureControl);
+
+	// Event handler
+	function handleMeasure() {
+	  if (!measuring) {
+		selectLabel.style.display = "";
+		map.addInteraction(draw);
+		createHelpTooltip();
+		createMeasureTooltip();
+		measuring = true;
+	  } else {
+		selectLabel.style.display = "none";
+		map.removeInteraction(draw);
+		map.removeOverlay(helpTooltip);
+		map.removeOverlay(measureTooltip);
+		const staticTooltips = document.getElementsByClassName("tooltip-static");
+		while (staticTooltips.length > 0) {
+		  staticTooltips[0].parentNode.removeChild(staticTooltips[0]);
+		}
+		measureLayer.getSource().clear();
+		sketch = null;
+		measuring = false;
+	  }
+	}
+
+	measureButton.addEventListener('click', handleMeasure);
+	measureButton.addEventListener('touchstart', handleMeasure);
+
+    map.on('pointermove', function(evt) {
+        if (evt.dragging) {
+            return;
+        }
+        if (measuring) {
+            /** @type {string} */
+            var helpMsg = 'Click to start drawing';
+            if (sketch) {
+                var geom = (sketch.getGeometry());
+                if (geom instanceof ol.geom.Polygon) {
+                    helpMsg = continuePolygonMsg;
+                } else if (geom instanceof ol.geom.LineString) {
+                    helpMsg = continueLineMsg;
+                }
+            }
+            helpTooltipElement.innerHTML = helpMsg;
+            helpTooltip.setPosition(evt.coordinate);
+        }
+    });
+    
+
+    var selectLabel = document.createElement("label");
+    selectLabel.innerHTML = "&nbsp;Measure:&nbsp;";
+
+    var typeSelect = document.createElement("select");
+    typeSelect.id = "type";
+
+    var measurementOption = [
+        { value: "LineString", description: "Length" },
+        { value: "Polygon", description: "Area" }
+        ];
+    measurementOption.forEach(function (option) {
+        var optionElement = document.createElement("option");
+        optionElement.value = option.value;
+        optionElement.text = option.description;
+        typeSelect.appendChild(optionElement);
+    });
+
+    selectLabel.appendChild(typeSelect);
+    measureControl.appendChild(selectLabel);
+
+    selectLabel.style.display = "none";
+	/**
+	 * Currently drawn feature.
+	 * @type {ol.Feature}
+	 */
+
+	/**
+	 * The help tooltip element.
+	 * @type {Element}
+	 */
+	var helpTooltipElement;
+
+
+	/**
+	 * Overlay to show the help messages.
+	 * @type {ol.Overlay}
+	 */
+	var helpTooltip;
+
+
+	/**
+	 * The measure tooltip element.
+	 * @type {Element}
+	 */
+	var measureTooltipElement;
+
+
+	/**
+	 * Overlay to show the measurement.
+	 * @type {ol.Overlay}
+	 */
+	var measureTooltip;
+
+
+	/**
+	 * Message to show when the user is drawing a line.
+	 * @type {string}
+	 */
+	var continueLineMsg = 'Click to continue drawing the line';
 
 
 
+	/**
+	 * Message to show when the user is drawing a polygon.
+	 * @type {string}
+	 */
+	var continuePolygonMsg = "1click continue, 2click close";
+
+
+	var typeSelect = document.getElementById("type");
+	var typeSelectForm = document.getElementById("form_measure");
+
+	typeSelect.onchange = function (e) {		  
+	  map.removeInteraction(draw);
+	  addInteraction();
+	  map.addInteraction(draw);		  
+	};
+
+	var measureLineStyle = new ol.style.Style({
+	  stroke: new ol.style.Stroke({ 
+		color: "rgba(0, 0, 255)", //blu
+		lineDash: [10, 10],
+		width: 4
+	  }),
+	  image: new ol.style.Circle({
+		radius: 6,
+		stroke: new ol.style.Stroke({
+		  color: "rgba(255, 255, 255)", 
+		  width: 1
+		}),
+	  })
+	});
+
+	var measureLineStyle2 = new ol.style.Style({	  
+		stroke: new ol.style.Stroke({
+			color: "rgba(255, 255, 255)", 
+			lineDash: [10, 10],
+			width: 2
+		  }),
+	  image: new ol.style.Circle({
+		radius: 5,
+		stroke: new ol.style.Stroke({
+		  color: "rgba(0, 0, 255)", 
+		  width: 1
+		}),
+			  fill: new ol.style.Fill({
+		  color: "rgba(255, 204, 51, 0.4)", 
+		}),
+		  })
+	});
+
+	var labelStyle = new ol.style.Style({
+	  text: new ol.style.Text({
+		font: "14px Calibri,sans-serif",
+		fill: new ol.style.Fill({
+		  color: "rgba(0, 0, 0, 1)"
+		}),
+		stroke: new ol.style.Stroke({
+		  color: "rgba(255, 255, 255, 1)",
+		  width: 3
+		})
+	  })
+	});
+
+	var labelStyleCache = [];
+
+	var styleFunction = function (feature, type) {
+	  var styles = [measureLineStyle, measureLineStyle2];
+	  var geometry = feature.getGeometry();
+	  var type = geometry.getType();
+	  var lineString;
+	  if (!type || type === type) {
+		if (type === "Polygon") {
+		  lineString = new ol.geom.LineString(geometry.getCoordinates()[0]);
+		} else if (type === "LineString") {
+		  lineString = geometry;
+		}
+	  }
+	  if (lineString) {
+		var count = 0;
+		lineString.forEachSegment(function (a, b) {
+		  var segment = new ol.geom.LineString([a, b]);
+		  var label = formatLength(segment);
+		  if (labelStyleCache.length - 1 < count) {
+			labelStyleCache.push(labelStyle.clone());
+		  }
+		  labelStyleCache[count].setGeometry(segment);
+		  labelStyleCache[count].getText().setText(label);
+		  styles.push(labelStyleCache[count]);
+		  count++;
+		});
+	  }
+	  return styles;
+	};
+	var source = new ol.source.Vector();
+
+	var measureLayer = new ol.layer.Vector({
+	  source: source,
+	  displayInLayerSwitcher: false,
+	  style: function (feature) {
+		labelStyleCache = [];
+		return styleFunction(feature);
+	  }
+	});
+
+	map.addLayer(measureLayer);
+
+	var draw; // global so we can remove it later
+	function addInteraction() {
+	  var type = typeSelect.value;
+	  draw = new ol.interaction.Draw({
+		source: source,
+		type: /** @type {ol.geom.GeometryType} */ (type),
+		style: function (feature) {
+				  return styleFunction(feature, type);
+				}
+	  });
+
+	  var listener;
+	  draw.on('drawstart',
+		  function(evt) {
+			// set sketch
+			sketch = evt.feature;
+
+			/** @type {ol.Coordinate|undefined} */
+			var tooltipCoord = evt.coordinate;
+
+			listener = sketch.getGeometry().on('change', function(evt) {
+			  var geom = evt.target;
+			  var output;
+			  if (geom instanceof ol.geom.Polygon) {
+					  output = formatArea(/** @type {ol.geom.Polygon} */ (geom));
+					  tooltipCoord = geom.getInteriorPoint().getCoordinates();
+					} else if (geom instanceof ol.geom.LineString) {
+					  output = formatLength(/** @type {ol.geom.LineString} */ (geom));
+					  tooltipCoord = geom.getLastCoordinate();
+					}
+			  measureTooltipElement.innerHTML = output;
+			  measureTooltip.setPosition(tooltipCoord);
+			});
+		  }, this);
+
+	  draw.on('drawend',
+		  function(evt) {
+			measureTooltipElement.className = 'tooltip tooltip-static';
+			measureTooltip.setOffset([0, -7]);
+			// unset sketch
+			sketch = null;
+			// unset tooltip so that a new one can be created
+			measureTooltipElement = null;
+			createMeasureTooltip();
+			ol.Observable.unByKey(listener);
+		  }, this);
+	}
+
+
+	/**
+	 * Creates a new help tooltip
+	 */
+	function createHelpTooltip() {
+	  if (helpTooltipElement) {
+		helpTooltipElement.parentNode.removeChild(helpTooltipElement);
+	  }
+	  helpTooltipElement = document.createElement('div');
+	  helpTooltipElement.className = 'tooltip hidden';
+	  helpTooltip = new ol.Overlay({
+		element: helpTooltipElement,
+		offset: [15, 0],
+		positioning: 'center-left'
+	  });
+	  map.addOverlay(helpTooltip);
+	}
+
+
+	/**
+	 * Creates a new measure tooltip
+	 */
+	function createMeasureTooltip() {
+	  if (measureTooltipElement) {
+		measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+	  }
+	  measureTooltipElement = document.createElement('div');
+	  measureTooltipElement.className = 'tooltip tooltip-measure';
+	  measureTooltip = new ol.Overlay({
+		element: measureTooltipElement,
+		offset: [0, -15],
+		positioning: 'bottom-center'
+	  });
+	  map.addOverlay(measureTooltip);
+	}
+
+
+  /**
+  * format length output
+  * @param {ol.geom.LineString} line
+  * @return {string}
+  */
+  var formatLength = function(line) {
+    var length;
+    var coordinates = line.getCoordinates();
+    length = 0;
+    var sourceProj = map.getView().getProjection();
+    for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
+        var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:4326');
+        var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:4326');
+        length += ol.sphere.getDistance(c1, c2);
+      }
+    var output;
+    if (length > 100) {
+      output = (Math.round(length / 1000 * 100) / 100) +
+          ' ' + 'km';
+    } else {
+      output = (Math.round(length * 100) / 100) +
+          ' ' + 'm';
+    }
+    return output;
+  };
+
+  /**
+  * Format area output.
+  * @param {ol.geom.Polygon} polygon The polygon.
+  * @return {string} Formatted area.
+  */
+	var formatArea = function (polygon) {
+		var sourceProj = map.getView().getProjection();
+		var geom = polygon.clone().transform(sourceProj, 'EPSG:3857');
+		var area = Math.abs(ol.sphere.getArea(geom));
+		var output;
+		if (area > 1000000) {
+			output = Math.round((area / 1000000) * 1000) / 1000 + ' ' + 'km<sup>2</sup>';
+		} else {
+			output = Math.round(area * 100) / 100 + ' ' + 'm<sup>2</sup>';
+		}
+		return output.replace('.', ',');
+	};
+
+  addInteraction();
+
+  var parentElement = document.querySelector(".measure-control");
+  var elementToMove = document.getElementById("form_measure");
+  if (elementToMove && parentElement) {
+    parentElement.insertBefore(elementToMove, parentElement.firstChild);
+  }
 
 
 //geocoder
@@ -569,8 +889,8 @@ map.addControl(layerSwitcher);
 
 map.getView().on('change:resolution', function(evt){
 
-            lyr_Glacierrocheux_4.setStyle(style_Glacierrocheux_4);
-            lyr_Lignes_93_5.setStyle(style_Lignes_93_5);
+            lyr_Glacierrocheux_3.setStyle(style_Glacierrocheux_3);
+            lyr_Lignes_93_4.setStyle(style_Lignes_93_4);
 });
 
 function m2px(m) {
