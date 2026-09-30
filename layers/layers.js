@@ -83,7 +83,7 @@ lyr_Glacierrocheux_3.set('fieldAliases', {'id': 'id', 'Activiter': 'Activiter', 
 lyr_Lignes_93_4.set('fieldAliases', {'id': 'id', 'Type': 'Type', });
 lyr_Glacierrocheux_3.set('fieldImages', {'id': 'TextEdit', 'Activiter': 'TextEdit', 'Photos': 'ExternalResource', });
 lyr_Lignes_93_4.set('fieldImages', {'id': 'TextEdit', 'Type': 'TextEdit', });
-lyr_Glacierrocheux_3.set('fieldLabels', {'id': 'no label', 'Activiter': 'no label', 'Photos': 'no label', });
+lyr_Glacierrocheux_3.set('fieldLabels', {'id': 'no label', 'Activiter': 'no label', 'Photos': 'inline label - always visible', });
 lyr_Lignes_93_4.set('fieldLabels', {'id': 'no label', 'Type': 'no label', });
 lyr_Lignes_93_4.on('precompose', function(evt) {
     evt.context.globalCompositeOperation = 'normal';
